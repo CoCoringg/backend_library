@@ -1,4 +1,5 @@
 <body>
+<div>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
         <a class="navbar-brand" href="/">Elice 도서관</a>
@@ -14,4 +15,23 @@
         </div>
     </div>
 </nav>
+</div>
+
+{% for d in data %}
+<hr>
+<div class="card mt-2">
+    <div class="card-body">
+        <div class="mb-3">
+            <label class="form-label">{{d.book_name}}</label>
+            <p>{{d.description}}</p>
+        </div>
+        {{d.publisher}}
+    </div>
+    
+</div>
+<hr>
+{% endfor %}
+<div>
+    
+</div>
 </body>

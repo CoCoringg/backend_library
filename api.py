@@ -1,6 +1,6 @@
 from flask import Blueprint, json, render_template, redirect, jsonify, request, session, g
 from db_connect import db
-from models import User
+from models import User, Book
 from flask_bcrypt import Bcrypt
 
 library = Blueprint('library',__name__)
@@ -18,18 +18,20 @@ def load_logged_in_user():
 
 @library.route("/")
 def hello():
-    return render_template('base.html')
+    data = Book.query.order_by(Book.id).all()
+    return render_template('base.html', data = data)
 
 @library.route('/join', methods=['GET','POST'])
 def join():
     if request.method == 'GET':
         return render_template('join.html')
     else : #POST일 경우 
+        name = request.form['name']
         user_id = request.form['user_id']
         user_pw = request.form['user_pw']
         pw_hash = bcrypt.generate_password_hash(user_pw)
 
-        user = User(user_id, pw_hash)
+        user = User(name, user_id, pw_hash)
         db.session.add(user)
         db.session.commit()
 

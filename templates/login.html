@@ -6,6 +6,11 @@
         function login() {
             let user_id = $("#userId").val()
             let user_pw = $("#userPw").val()
+
+            if (user_id == '' || user_pw == '') {
+                alert("아이디와 패스워드를 입력 해주세요.");
+                return ;
+            }
             
             $.ajax({
                 url: '/login',
