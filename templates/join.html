@@ -1,7 +1,8 @@
+{% extends "base.html" %}
 <head>
-<script type=text/javascript src="{{url_for('static', filename='jquery.js') }}"></script>
-<!-- <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
-    crossorigin="anonymous"></script> -->
+{% block head %}
+{{ super() }}
+
 <script>
        
         function regist() {
@@ -39,10 +40,12 @@
             
         }
     </script>
-
+{% endblock %}
 </head>
 
 <body>
+{% block nav %}
+{{ super() }}
 <h2 class="title">Elice 도서관 회원가입</h2>
 <hr>
 <div class="card">
@@ -76,4 +79,5 @@
         </div>
 </div>
 <hr>
+{% endblock %}
 </body>

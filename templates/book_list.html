@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+<head>
+    {% block head %}
+    {{ super() }}
+    
+    <script language="javascript">
+        function rentalPopup(id) {
+            console.log(id)
+            window.open(`/rentalpopup/${id}`, "대여하기", "width=800, height=300, left=100, top=50");
+        }
+
+        function returnPopup(id) {
+            window.open(`/returnpopup/${id}`, "반납하기", "width=800, height=300, left=100, top=50");
+        }
+    </script>
+    {% endblock %}
+</head>
+
+<body>
+    {% block nav %}
+    {{ super() }}
+    <div class="card mt-2">
+        <ul >
+            {% for d in data %}
+                
+                        <li class='card-body'>
+                            <div class='cntainer'>
+                                {% if d.id == 1 or d.id == 2 or d.id == 3 or d.id == 7 or d.id == 8 or d.id ==9 %}
+                                    <img id="imgs" src="{{ url_for('static', filename='book_img/{}.png'.format(d.id)) }}">
+                                {% else %}
+                                    <img id="imgs" src="{{ url_for('static', filename='book_img/{}.jpg'.format(d.id)) }}">
+                                {% endif %}
+                                    <label class="form-label"><a href="/detail/{{d.id}}">{{d.book_name}}</a></label>
+                                    <p>{{d.author}}</p>
+                                    <p>{{d.publication_date}}</p>
+                                    <p>{{d.publisher}}</p>
+                                    <p>재고: {{d.inventory}}</p>
+                                    {% if not session['login'] %}
+                                        <p class='rental_button'>로그인 후 대여가능</p>
+                                    {% else %}
+                                        
+                                        <p class='rental_button'>
+                                            <button id='book_rental_id' onclick='rentalPopup("{{d.id}}")'>대여하기</button>
+                                            <button id='book_return_id' onclick="returnPopup('{{d.id}}')">반납하기</button>
+                                        </p>
+
+                                        
+                                        
+                                    {% endif %}
+                            </div>
+                        </li>
+                    
+            {% endfor %}
+        <ul >
+    </div>
+    {% endblock %}
+</body>

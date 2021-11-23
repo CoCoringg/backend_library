@@ -1,0 +1,60 @@
+* {
+    margin: 0;
+}
+
+#left {
+    text-align : left;
+}
+
+#imgs {
+    width: 250px;
+    height: 300px;
+    margin-bottom: 20px;
+
+}
+
+.book_detail {
+    text-align: center;
+}
+
+.description {
+    width: 50%;
+    padding-left: 25%;
+    
+}
+
+
+ul {
+    list-style:none;
+    display:grid; 
+    grid-template-columns: 250px 250px 250px 250px;
+    grid-template-rows: 550px 550px ;
+    gap: 30px 30px;
+
+}
+
+
+.card-body {
+    display: inline-block;
+    width: 250px;
+    height: 550px;
+    outline: 3px solid gray;
+}
+
+
+p {
+    margin-bottom: 10px;
+}
+
+
+.book_return_id {
+    text-align: right;
+}
+
+a { 
+    display: inline-block;
+    text-decoration:none;
+    margin-bottom: 10px;
+ } 
+
+

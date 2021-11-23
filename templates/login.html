@@ -1,6 +1,9 @@
+{% extends "base.html" %}
 <head>
-    <script type=text/javascript src="{{url_for('static', filename='jquery.js') }}"></script> 
-    
+    {% block head %}
+    <!-- {{ super() }} 스타일시트 적용--> 
+    {{ super() }}
+
     <script>
         
         function login() {
@@ -32,9 +35,12 @@
             })
         }
     </script>
+    {% endblock %}
 </head>
 
 <body>
+{% block nav %}
+{{ super() }}
 <h2 class="title">Elice 도서관 로그인</h2>
 <hr>
 <div class="card">
@@ -56,4 +62,5 @@
     </div>
 </div>
 <hr>
+{% endblock %}
 </body>

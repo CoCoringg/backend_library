@@ -1,0 +1,46 @@
+<html>
+<head>
+  <title>대여하기</title>
+  <script type=text/javascript src="{{url_for('static', filename='jquery.js') }}"></script>
+    <script language="javascript">
+        function return_go(book_name) {
+            
+            
+            $.ajax({
+                url: '/return',
+                type: 'post',
+                data: {
+                    
+                    'book_name':book_name
+                },
+                success: function (res) {
+                    if (res['result'] == 'success') {
+                            alert("반납 성공!");
+                            opener.parent.location.reload();
+                            window.close();
+                    } else {
+                        alert("대여 후 이용해주세요.");
+                        window.close();
+                    }
+            }
+            })
+
+        }
+    </script>
+</head>
+<body>
+    <h1>반납하기</h1>
+    <hr>
+    {% for d in data %}
+        <div class='book_detail'>
+            
+            <h4>{{d.book_name}}</h4>
+            <p>반납: 1권</p>
+            <div><button id='return' onclick="return_go('{{d.book_name}}')" >반납</button></div>
+            
+        </div>
+    {% endfor %}
+    
+
+</body>
+</html>

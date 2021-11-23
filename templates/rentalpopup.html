@@ -1,0 +1,46 @@
+<html>
+<head>
+  <title>대여하기</title>
+  <script type=text/javascript src="{{url_for('static', filename='jquery.js') }}"></script>
+    <script language="javascript">
+        function rental(book_name) {
+            
+            
+            $.ajax({
+                url: '/rental',
+                type: 'post',
+                data: {
+                    
+                    'book_name':book_name
+                },
+                success: function (res) {
+                    if (res['result'] == 'success') {
+                            alert("대여 성공!");
+                            opener.parent.location.reload();
+                            window.close();
+                    } else {
+                        alert("이미 대여하였습니다. 반납 후 다시 대여해주세요!");
+                        window.close();
+                    }
+            }
+            })
+
+        }
+    </script>
+</head>
+<body>
+    <h1>대여하기</h1>
+    <hr>
+    {% for d in data %}
+        <div class='book_detail'>
+            
+            <h4>{{d.book_name}}</h4>
+            <p>재고: {{d.inventory}}</p>
+            <div><button id='rental' onclick="rental('{{d.book_name}}')" >대여</button></div>
+            
+        </div>
+    {% endfor %}
+    
+
+</body>
+</html>
