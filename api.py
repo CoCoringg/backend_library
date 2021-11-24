@@ -1,3 +1,4 @@
+from operator import index
 from flask import Blueprint, json, render_template, redirect, jsonify, request, session, g
 from flask.templating import render_template_string
 from db_connect import db
@@ -19,6 +20,16 @@ def load_logged_in_user():
 
 @library.route("/")
 def hello():
+    starSum = 0
+    for id in range(1,33):
+        book = Book.query.filter(Book.id == id).first()
+        star = Post.query.filter(Post.book_id ==id).all()
+        for d in star:
+            
+            starSum += d.starValue
+            book.starAvg = starSum//len(star)
+            db.session.commit() 
+    
     if session.get('login') is not None:
         
         data = Book.query.order_by(Book.id).all()
@@ -74,11 +85,12 @@ def logout():
 def detail_go(id):
     id = int(id)
     book_data = Book.query.filter(Book.id == id).all()
+    post_list = Post.query.filter(Post.book_id == id).order_by(Post.time.desc()).all()
     if id == 1 or id == 2 or id == 3 or id == 7 or id == 8 or id == 9 :
         img_url = f'book_img/{id}.png'
     else :
         img_url = f'book_img/{id}.jpg'
-    return render_template('detail.html', data = book_data, img_url = img_url)
+    return render_template('detail.html', data = book_data, img_url = img_url, post_list = post_list)
 
 
 
@@ -138,9 +150,46 @@ def return_go():
 def post():
     user_id = request.form['user_id']
     content = request.form['content']
+    book_id = request.form['book_id']
+    starValue = request.form['starValue']
 
-    post = Post(user_id, content)
+    post = Post(user_id, content, book_id, starValue)
     db.session.add(post)
     db.session.commit()
 
     return jsonify({"result":"success"})
+
+#댓글 수정
+@library.route('/post',methods=['PATCH'])
+def update():
+    index = request.form['index'] #POST 테이블 댓글 index
+    content = request.form['content'] #새로 바꿀 내용
+    new_star = request.form['starValue'] #새로운 별점
+
+    user = User.query.filter(User.id == session['login']).first()
+
+    data = Post.query.filter(Post.index == index and Post.user_id == user.user_id).first()
+
+    data.content = content
+    data.starValue = new_star
+    db.session.commit()
+
+    return jsonify({"result":"success"})
+
+#댓글 삭제
+@library.route('/post',methods=['DELETE'])
+def delete():
+    index = request.form['index']
+    user_id = request.form['user_id']
+
+    data = Post.query.filter(Post.index == index and Post.user_id == user_id).first()
+    
+    if data is not None:
+        db.session.delete(data)
+        db.session.commit()
+        return jsonify({"result":"success"})
+    
+    else:
+        return jsonify({"result":"fail"})
+
+    

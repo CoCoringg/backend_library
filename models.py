@@ -28,6 +28,7 @@ class Book(db.Model):
     description = db.Column(db.Text)
     link = db.Column(db.Text)
     inventory = db.Column(db.Integer)
+    starAvg = db.Column(db.Numeric(precision=2, scale=1), default=0)
 
 class Rental(db.Model):
     __tablename__ = 'rental'
@@ -47,7 +48,11 @@ class Post(db.Model):
     user_id = db.Column(db.String(100),primary_key=True, nullable=False)
     content = db.Column(db.Text, nullable=False)
     time = db.Column(db.DateTime, default=datetime.utcnow)
+    book_id = db.Column(db.Integer, nullable=False)
+    starValue = db.Column(db.Integer, nullable=False)
 
-    def __init__(self, user_id, content):
+    def __init__(self, user_id, content, book_id, starValue):
         self.user_id = user_id
         self.content = content
+        self.book_id = book_id
+        self.starValue = starValue

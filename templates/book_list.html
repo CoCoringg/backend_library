@@ -35,17 +35,14 @@
                                     <p>{{d.publication_date}}</p>
                                     <p>{{d.publisher}}</p>
                                     <p>재고: {{d.inventory}}</p>
+                                    <p>평점: {{d.starAvg}}</p>
                                     {% if not session['login'] %}
                                         <p class='rental_button'>로그인 후 대여가능</p>
                                     {% else %}
-                                        
                                         <p class='rental_button'>
                                             <button id='book_rental_id' onclick='rentalPopup("{{d.id}}")'>대여하기</button>
                                             <button id='book_return_id' onclick="returnPopup('{{d.id}}')">반납하기</button>
                                         </p>
-
-                                        
-                                        
                                     {% endif %}
                             </div>
                         </li>
