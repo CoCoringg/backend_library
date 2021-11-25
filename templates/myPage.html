@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+<head>
+    {% block head %}
+    {{ super() }}
+    {% endblock %}
+
+</head>
+
+
+<body>
+    {% block nav %}
+    {{ super() }}
+
+    <h2>마이페이지</h2>
+
+    
+        {% if data is not none %}
+            {% for d in data %}
+                <div>
+                    {% if d.book_id == 1 or d.book_id == 2 or d.book_id == 3 or d.book_id == 7 or d.book_id == 8 or d.book_id ==9 %}
+                        <img id="imgs" src="{{ url_for('static', filename='book_img/{}.png'.format(d.book_id)) }}" />
+                    {% else %}
+                        <img id="imgs" src="{{ url_for('static', filename='book_img/{}.jpg'.format(d.book_id)) }}" />
+                    {% endif %}
+                    <p>대여한 책: {{ d.book_name }}</p>
+                    <p>대여한 날짜: {{ d.rentalTime }}</p>
+                    <p>빌린 권 수: {{ d.rental_count }}</p>
+                    <hr>
+                </div>
+            {% endfor %}
+        {% else %}
+            <h4>대여 기록이 없습니다.</h4>
+        {% endif %}
+    
+
+    {% endblock %}
+</body>

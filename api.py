@@ -107,10 +107,11 @@ def rental_popup(id):
 def rental():
     
     book_name = request.form['book_name']
+    book_id = request.form['book_id']
     user = User.query.filter(User.id== session.get('login')).first() #대여하는 user 정보
     
     if Rental.query.filter(Rental.user_id == user.user_id and Rental.book_name == book_name).first() is None:
-        rental = Rental(user.user_id, book_name, 1 )
+        rental = Rental(user.user_id, book_name, 1 ,book_id)
         Book.query.filter(Book.book_name == book_name).update({'inventory': Book.inventory - 1})
         db.session.add(rental)
         db.session.commit()
@@ -192,4 +193,10 @@ def delete():
     else:
         return jsonify({"result":"fail"})
 
-    
+#마이페이지 (대여 기록 보여주기)
+@library.route('/my-page', methods=['GET','POST'])
+def myPage():
+    if request.method == 'GET':
+        user = User.query.filter(User.id == session['login']).first()
+        rental_data = Rental.query.filter(Rental.user_id == user.user_id).all()
+        return render_template('myPage.html', data = rental_data)

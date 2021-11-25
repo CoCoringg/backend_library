@@ -3,7 +3,7 @@
   <title>대여하기</title>
   <script type=text/javascript src="{{url_for('static', filename='jquery.js') }}"></script>
     <script language="javascript">
-        function rental(book_name) {
+        function rental(book_name,book_id) {
             
             
             $.ajax({
@@ -11,7 +11,8 @@
                 type: 'post',
                 data: {
                     
-                    'book_name':book_name
+                    'book_name':book_name,
+                    'book_id':book_id
                 },
                 success: function (res) {
                     if (res['result'] == 'success') {
@@ -36,7 +37,7 @@
             
             <h4>{{d.book_name}}</h4>
             <p>재고: {{d.inventory}}</p>
-            <div><button id='rental' onclick="rental('{{d.book_name}}')" >대여</button></div>
+            <div><button id='rental' onclick="rental('{{d.book_name}}','{{d.id}}')" >대여</button></div>
             
         </div>
     {% endfor %}
