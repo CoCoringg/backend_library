@@ -1,17 +1,34 @@
+<head>
+    {% block head %}
+    <title>Elice 도서관</title>
+    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
+    <script type=text/javascript src="{{url_for('static', filename='jquery.js') }}"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+    {% endblock %}
+</head>
+
 <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="/">Elice 도서관</a>
-        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <div class="navbar-nav">
-                {% if not session['login'] %}
-                    <a class="nav-link" href="/login">로그인</a>
-                    <a class="nav-link" href="/join">회원가입</a>
-                {% else %}
-                    <a class="nav-link" href="/logout">로그아웃</a>
-                {% endif %}
-            </div>
-        </div>
+{% block nav %}
+<div>
+<nav class="nav-style">
+    <div>
+        <ul id="nav2" class="nav justify-content-center" style="background-color: gray;">
+            <li class="nav-item"><a class="nav-link" style="color: black" href="/">Elice 도서관</a></li>
+        
+            {% if not session['login'] %}
+                <li class="nav-item"><a class="nav-link" style="color: black" href="/login">로그인</a></li>
+                <li class="nav-item"><a class="nav-link" style="color: black" href="/join">회원가입</a></li>
+            {% else %}
+                <li class="nav-item"><a class="nav-link" style="color: black" href='/my-page'>마이페이지</a></li>
+                <li class="nav-item"><a class="nav-link" style="color: black"  href="/logout">로그아웃</a></li>
+            {% endif %}
+        </ul>
     </div>
 </nav>
+</div>
+{% endblock %}
+
 </body>

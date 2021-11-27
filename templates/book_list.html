@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+<head>
+    {% block head %}
+    {{ super() }}
+
+    
+    <script language="javascript">
+        function rentalPopup(id) {
+            console.log(id)
+            window.open(`/rentalpopup/${id}`, "대여하기", "width=800, height=300, left=100, top=10");
+        }
+    </script>
+    {% endblock %}
+</head>
+
+<body>
+    {% block nav %}
+    {{ super() }}
+    <div >
+        <h2 class="title" >BOOK LIST</h2>
+        <hr>
+        <ul class="booklist">
+            {% for d in data %}
+                
+                        <li class='card-body'>
+                            <div >
+                                {% if d.id == 1 or d.id == 2 or d.id == 3 or d.id == 7 or d.id == 8 or d.id ==9 %}
+                                    <img id="imgs" class='imgs' src="{{ url_for('static', filename='book_img/{}.png'.format(d.id)) }}">
+                                {% else %}
+                                    <img id="imgs" class='imgs' src="{{ url_for('static', filename='book_img/{}.jpg'.format(d.id)) }}">
+                                {% endif %}
+                                    <label class="form-label"><a style="color:black" href="/detail/{{d.id}}">{{d.book_name}}</a></label>
+                                    <hr>
+                                    <div class='cntainer'>
+                                    <p class='book-p'>{{d.author}}</p>
+                                    <p class='book-p'>{{d.publication_date}}</p>
+                                    <p class='book-p'>{{d.publisher}}</p>
+                                    <p class='book-p'>재고: {{d.inventory}}</p>
+                                    <p class='book-p'>평점: {{d.starAvg}}</p>
+                                    </div>
+                                    <hr>
+                                    {% if not session['login'] %}
+                                        <p class='login-before'>로그인 후 대여가능</p>
+                                    {% else %}
+                                        <p class='rental-p'>
+                                            <button id='book_rental_id' class="rental-button" onclick='rentalPopup("{{d.id}}")'>대여하기</button>
+                                        </p>
+                                    {% endif %}
+        
+                            </div>
+                        </li>
+                    
+            {% endfor %}
+        <ul >
+    </div>
+
+    
+    {% endblock %}
+</body>

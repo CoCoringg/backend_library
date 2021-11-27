@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+<head>
+    {% block head %}
+    {{ super() }}
+    
+
+    <script>
+        function returnPopup(id) {
+            window.open(`/returnpopup/${id}`, "반납하기", "width=800, height=300, left=100, top=50");
+        }
+    </script>
+    {% endblock %}
+</head>
+
+
+<body>
+    {% block nav %}
+    {{ super() }}
+
+
+    <h2 class='title'>마이페이지</h2>
+    <hr>
+    <h3 class='mypage-h3'>{{user.name}}님의 대여목록입니다.</h3>
+    <ul class="booklist">
+        {% if data != [] %}
+            
+            {% for d in data %}
+            <li class='card-body'>
+                <div class='rental-list'> 
+                    {% if d.book_id == 1 or d.book_id == 2 or d.book_id == 3 or d.book_id == 7 or d.book_id == 8 or d.book_id ==9 %}
+                        <img id="imgs" class="imgs" src="{{ url_for('static', filename='book_img/{}.png'.format(d.book_id)) }}" />
+                    {% else %}
+                        <img id="imgs" class='imgs' src="{{ url_for('static', filename='book_img/{}.jpg'.format(d.book_id)) }}" />
+                    {% endif %}
+                    <p>대여한 책: {{ d.book_name }}</p>
+                    <hr>
+                    <p>대여한 날짜: {{ d.rentalTime }}</p>
+                    <hr>
+                    <p>빌린 권 수: {{ d.rental_count }}</p>
+                    <hr>
+                    <p>반납 날짜: {{d.returnTime}}</p>
+                    <hr>
+                    <button id='book_return_id' class="return-button" onclick='returnPopup(`{{d.book_id}}`)'>반납하기</button>
+                </div>
+            </li>
+            {% endfor %}
+        {% else %}
+            <h4 class='title'>-대여 기록이 없습니다-</h4>
+        {% endif %}
+    </ul>
+
+    {% endblock %}
+</body>
