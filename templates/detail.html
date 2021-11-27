@@ -10,6 +10,16 @@
             let user_id = `{{g.user.user_id}}`
             let starValue = $('input[name=rating]:checked').val()
 
+            if (starValue == null || content == '' ) {
+                $().ready(function () {  
+                    Swal.fire({ 
+                    icon: 'error', // Alert 타입 
+                    title: '오류!', // Alert 제목 
+                    text: "별점과 댓글 모두 입력해주세요!", // Alert 내용
+                 }); });
+                return;
+            }
+
             $.ajax({
                 url: '/post',
                 type: 'post',
@@ -22,10 +32,23 @@
                 success: function (res) {
                         let result = res['result']
                         if (result == "success") {
-                                alert("댓글을 달았습니다!")
-                                window.location.reload()
+                            $().ready(function () {  
+                                Swal.fire({ 
+                                icon: 'success', // Alert 타입 
+                                title: '완료!', // Alert 제목 
+                                text: "댓글 달기 완료!", // Alert 내용
+                             }); });
+    
+                             setTimeout(function() {
+                                window.location.reload();
+                              }, 2000);
                         } else {
-                                alert("저장에 실패 했습니다!")
+                            $().ready(function () {  
+                                Swal.fire({ 
+                                icon: 'error', // Alert 타입 
+                                title: '실패!', // Alert 제목 
+                                text: "저장에 실패했습니다", // Alert 내용
+                             }); });
                         }
                 }
         })
@@ -43,10 +66,25 @@
                 },
                 success: function (res) {
                     if (res['result'] == 'success') {
-                        alert("삭제 성공!")
-                        window.location.reload()
+                        
+                        $().ready(function () {  
+                            Swal.fire({ 
+                            icon: 'success', // Alert 타입 
+                            title: '완료!', // Alert 제목 
+                            text: "삭제 완료", // Alert 내용
+                         }); });
+
+                         setTimeout(function() {
+                            window.location.reload();
+                          }, 2000);
                     } else {
-                        alert("삭제 실패!")
+                        $().ready(function () {  
+                            Swal.fire({ 
+                            icon: 'error', // Alert 타입 
+                            title: '실패!', // Alert 제목 
+                            text: "삭제 실패", // Alert 내용
+                         }); });
+                        
                     }
                 }
             })
@@ -54,6 +92,16 @@
         function postUpdatePost(index) {
             let content = $(`#userEidContent${index}`).val()
             let starValue = $('input[name=new_rating]:checked').val()
+
+            if (starValue == null || content == '' ) {
+                $().ready(function () {  
+                    Swal.fire({ 
+                    icon: 'error', // Alert 타입 
+                    title: '오류!', // Alert 제목 
+                    text: "별점과 댓글 모두 입력해주세요!", // Alert 내용
+                 }); });
+                return;
+            }
 
             $.ajax({
                 url: '/post',
@@ -65,8 +113,18 @@
                 },
                 success: function (res) {
                     if (res['result'] == 'success') {
-                        alert("수정완료!")
-                        window.location.reload()
+                        
+                        $().ready(function () {  
+                            Swal.fire({ 
+                            icon: 'success', // Alert 타입 
+                            title: '완료!', // Alert 제목 
+                            text: "수정 완료", // Alert 내용
+                         }); });
+
+                         setTimeout(function() {
+                            window.location.reload();
+                          }, 2000);
+                        
                     }
                 }
             })
@@ -75,8 +133,8 @@
  
         function updatePost(index) {
             let content = $(`#userContent${index}`).text()
-            let tmpHtml = `<textarea id=userEidContent${index} class="form-control" rows="3"></textarea>`
-            let tmpBtn = `<button class="btn btn-sm btn-success" onclick="postUpdatePost(${index})">수정완료</button>`
+            let tmpHtml = `<div><textarea id=userEidContent${index} rows="3" cols='50' style="resize: none;"></textarea></div>`
+            let tmpBtn = `<button class="new-btn" onclick="postUpdatePost(${index})">수정완료</button>`
             let starValue = `<div class="new-star-rating">
                                 <input type="radio" id="new-5-stars" name="new_rating" value="5"  />
                                 <label for="new-5-stars" class="star">&#9733;</label>
@@ -95,6 +153,8 @@
             $(".update_star").append(starValue)
             $("#edit-area").append(tmpHtml)
             $(`#editBtn${index}`).hide()
+            $(`#delBtn${index}`).hide()
+            $('#postTime').hide()
             $(`#userEidContent${index}`).val(content)
             $("#edit-area").append(tmpBtn)
     
@@ -106,23 +166,32 @@
 <body> 
     {% block nav %}
     {{ super() }}
+    <h2 class='title'>상세페이지</h2>
+    <hr>
     {% for d in data %}
         <div class='book_detail'>
-            <h2>{{d.book_name}}</h2>
-            <img id="imgs" src="{{ url_for('static', filename='{}'.format(img_url)) }}">
-            <p>작가: {{d.author}}</p>
-            <p>출판사: {{d.publisher}}</p>
-            <p>출판날짜: {{d.publication_date}}</p>
-            <p>페이지: {{d.pages}}</p>
-            <p class="description">상세설명: {{d.description}}</p>
-            <p>링크: {{d.link}}</p>
-            <p>재고: {{d.inventory}}</p>
+            <h2 class='book-name'>{{d.book_name}}</h2>
+            <img id="imgs" class='detail-img' src="{{ url_for('static', filename='{}'.format(img_url)) }}">
+            <label class="detail-label">작가</label>
+            <p>{{d.author}}</p>
+            <label class="detail-label">출판사</label>
+            <p>{{d.publisher}}</p>
+            <label class="detail-label">출판날짜</label>
+            <p>{{d.publication_date}}</p>
+            <label class="detail-label">페이지</label>
+            <p>{{d.pages}}</p>
+            <label class="detail-label">상세설명</label>
+            <p class="description">{{d.description}}</p>
+            <label class="detail-label">링크</label>
+            <p>{{d.link}}</p>
+            <label class="detail-label">재고</label>
+            <p>{{d.inventory}}권</p>
         </div>
     
     
     <hr>
     <h2 class='book_detail'>평점 및 후기</h2>
-    
+    <hr>
     <div class='book_detail'>
         
         <div>
@@ -134,22 +203,24 @@
                 <!-- 책 페이지(id)에서만 댓글 보이게하기 // 책 id도 넘겨줘야할듯 // 평점만들기 -->
                 <div>
                     <p>{{g.user.user_id}}님, 후기를 남겨주세요!</p>
-                    <div class="star-rating">
-                        <input type="radio" id="5-stars" name="rating" value="5"  />
-                        <label for="5-stars" class="star">&#9733;</label>
-                        <input type="radio" id="4-stars" name="rating" value="4" />
-                        <label for="4-stars" class="star">&#9733;</label>
-                        <input type="radio" id="3-stars" name="rating" value="3" />
-                        <label for="3-stars" class="star">&#9733;</label>
-                        <input type="radio" id="2-stars" name="rating" value="2"/>
-                        <label for="2-stars" class="star">&#9733;</label>
-                        <input type="radio" id="1-star" name="rating" value="1"/>
-                        <label for="1-star" class="star">&#9733;</label>
+                    <div class="star">
+                        <div class="star-rating">
+                            <input type="radio" id="5-stars" name="rating" value="5"  />
+                            <label for="5-stars" class="star">&#9733;</label>
+                            <input type="radio" id="4-stars" name="rating" value="4" />
+                            <label for="4-stars" class="star">&#9733;</label>
+                            <input type="radio" id="3-stars" name="rating" value="3" />
+                            <label for="3-stars" class="star">&#9733;</label>
+                            <input type="radio" id="2-stars" name="rating" value="2"/>
+                            <label for="2-stars" class="star">&#9733;</label>
+                            <input type="radio" id="1-star" name="rating" value="1"/>
+                            <label for="1-star" class="star">&#9733;</label>
+                        </div>
                     </div>
-                    <textarea id='my-content' rows="3" cols='100'></textarea>
+                    <textarea id='my-content' rows="3" cols='100' style="resize: none;"></textarea>
                 </div> 
                 <!-- 버튼 클릭안에 책id넘겨주기 -->
-                <button onclick="postContent('{{d.id}}')">작성하기</button>
+                <button class="snip1535" onclick="postContent('{{d.id}}')">작성하기</button>
             {% endif %}
         </div>
     </div>
@@ -158,38 +229,38 @@
     <div class="book_detail">
         <div>
             <div >
-                <label class="form-label">{{post.user_id}}</label>
-                <div class="update_star">
-                    <label class="starValue">
-                        <p class="star-yello">
-                            {% for i in range(1,post.starValue+1) %}
-                            &#9733;
-                            {% endfor %}
-                        </p>
-                        <p class="star-gray">
-                            {% for j in range(1,(5-post.starValue)+1) %}
-                            &#9733;
-                            {% endfor %}
-                        </p>
-                    </label>
-                   
-                        
-                    
+                <div class='comment'>
+                    <label class="form-label">{{post.user_id}}</label>
+                    <div class="update_star">
+                        <label class="starValue">
+                            <p class="star-yello">
+                                {% for i in range(1,post.starValue+1) %}
+                                &#9733;
+                                {% endfor %}
+                            </p>
+                            <p class="star-gray">
+                                {% for j in range(1,(5-post.starValue)+1) %}
+                                &#9733;
+                                {% endfor %}
+                            </p>
+                        </label>
+                    </div>
                 </div>
                 <div id='edit-area'>
                     <p id='userContent{{post.index}}'>{{post.content}}</p>
                 </div>
             </div>
-            {{post.time}}
+            <p id='postTime'>{{post.time}}</p>
         </div>
 
         
-        <div class="card-footer text-muted">
-            <button class="btn btn-sm btn-warning" onclick="deletePost('{{post.index}}')">삭제하기</button>
-            <button id='editBtn{{post.index}}' class="btn btn-sm btn-success" onclick="updatePost('{{post.index}}')">수정하기</button>
+        <div class="comment-btn">
+            <button class="del-btn" id='delBtn{{post.index}}'onclick="deletePost('{{post.index}}')">삭제하기</button>
+            <button class="update-btn" id='editBtn{{post.index}}' class="btn btn-sm btn-success" onclick="updatePost('{{post.index}}')">수정하기</button>
         </div>
         
     </div>
+    <hr>
     {% endfor %}    
     {% endfor %}
 

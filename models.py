@@ -36,14 +36,17 @@ class Rental(db.Model):
     user_id = db.Column(db.String(100), primary_key = True, nullable=False)
     book_name = db.Column(db.Text)
     rental_count = db.Column(db.Integer)
-    rentalTime = db.Column(db.DateTime, default=datetime.utcnow)
-    book_id = db.Column(db.Integer, nullable=False, unique=True)
+    rentalTime = db.Column(db.Date)
+    book_id = db.Column(db.Integer, nullable=False)
+    returnTime = db.Column(db.Date)
 
-    def __init__(self, user_id, book_name, rental_count, book_id):
+    def __init__(self, user_id, book_name, rental_count, book_id, rentalTime, returnTime):
         self.user_id = user_id
         self.book_name = book_name
         self.rental_count = rental_count
         self.book_id = book_id
+        self.rentalTime = rentalTime
+        self.returnTime = returnTime
 
 class Post(db.Model):
     __tablename__='post'

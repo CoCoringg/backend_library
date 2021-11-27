@@ -1,46 +1,69 @@
 <html>
 <head>
-  <title>대여하기</title>
-  <script type=text/javascript src="{{url_for('static', filename='jquery.js') }}"></script>
-    <script language="javascript">
-        function rental(book_name,book_id) {
-            
-            
-            $.ajax({
-                url: '/rental',
-                type: 'post',
-                data: {
-                    
-                    'book_name':book_name,
-                    'book_id':book_id
-                },
-                success: function (res) {
-                    if (res['result'] == 'success') {
-                            alert("대여 성공!");
-                            opener.parent.location.reload();
-                            window.close();
-                    } else {
-                        alert("이미 대여하였습니다. 반납 후 다시 대여해주세요!");
-                        window.close();
-                    }
-            }
-            })
+    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
+    <script type=text/javascript src="{{url_for('static', filename='jquery.js') }}"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    
+    <title>대여하기</title>
+    <script type=text/javascript src="{{url_for('static', filename='jquery.js') }}"></script>
+    <script>
+            function rental(book_name,book_id) {
+                
+                
+                $.ajax({
+                    url: '/rental',
+                    type: 'post',
+                    data: {
+                        
+                        'book_name':book_name,
+                        'book_id':book_id
+                    },
+                    success: function (res) {
+                        if (res['result'] == 'success') {
+                            $().ready(function () {  
+                                Swal.fire({ 
+                                icon: 'success', // Alert 타입 
+                                title: '완료!', // Alert 제목 
+                                text: "대여를 완료하였습니다!", // Alert 내용
+                             }); });
+                            
+                             setTimeout(function() {
+                                window.close();
+                              }, 2000);
+                                
+                        } else {
+                            $().ready(function () {  
+                                Swal.fire({ 
+                                icon: 'fail', // Alert 타입 
+                                title: '실패!', // Alert 제목 
+                                text: "이미 대여하였습니다. 반납 후 다시 대여해주세요!", // Alert 내용
+                             }); });
+                            
+                             setTimeout(function() {
+                                window.close();
+                              }, 2000);
+                            
+                        }
+                }
+                })
 
-        }
+            }
     </script>
 </head>
 <body>
-    <h1>대여하기</h1>
+    <h2 class='title' style="padding-top: 0;">대여하기</h2>
     <hr>
-    {% for d in data %}
         <div class='book_detail'>
-            
-            <h4>{{d.book_name}}</h4>
-            <p>재고: {{d.inventory}}</p>
-            <div><button id='rental' onclick="rental('{{d.book_name}}','{{d.id}}')" >대여</button></div>
+            <h4>{{data.book_name}}</h4>
+            <p>재고: {{data.inventory}}</p>
+            <p>반납일자: 대여일자로부터 10일 후</p>
+            <p>정말로 대여하시겠습니까?</p>
+            <div><button id='rental' class="rental-btn" onclick="rental('{{data.book_name}}','{{data.id}}')" >대여하기</button></div>
             
         </div>
-    {% endfor %}
+
     
 
 </body>

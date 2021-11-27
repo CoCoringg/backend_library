@@ -1,3 +1,4 @@
+import datetime
 from operator import index
 from flask import Blueprint, json, render_template, redirect, jsonify, request, session, g
 from flask.templating import render_template_string
@@ -20,21 +21,12 @@ def load_logged_in_user():
 
 @library.route("/")
 def hello():
-    starSum = 0
-    for id in range(1,33):
-        book = Book.query.filter(Book.id == id).first()
-        star = Post.query.filter(Post.book_id ==id).all()
-        for d in star:
-            
-            starSum += d.starValue
-            book.starAvg = starSum//len(star)
-            db.session.commit() 
-    
+             
     if session.get('login') is not None:
         
         data = Book.query.order_by(Book.id).all()
          
-        return render_template('book_list.html', data = data)
+        return render_template('book_list.html', data=data)
     
     else:
         data = Book.query.order_by(Book.id).all()
@@ -99,7 +91,7 @@ def rental_popup(id):
     id = int(id) #책 ID
     
     # if session.get("login") is not None:
-    book_data = Book.query.filter(Book.id == id).all()
+    book_data = Book.query.filter(Book.id == id).first()
     return render_template('rentalpopup.html', data = book_data) 
         
 
@@ -109,39 +101,41 @@ def rental():
     book_name = request.form['book_name']
     book_id = request.form['book_id']
     user = User.query.filter(User.id== session.get('login')).first() #대여하는 user 정보
+    book = Book.query.filter(Book.id == book_id).first() #책 정보
     
-    if Rental.query.filter(Rental.user_id == user.user_id and Rental.book_name == book_name).first() is None:
-        rental = Rental(user.user_id, book_name, 1 ,book_id)
-        Book.query.filter(Book.book_name == book_name).update({'inventory': Book.inventory - 1})
-        db.session.add(rental)
-        db.session.commit()
-        return jsonify({"result":"success"})
+    if Rental.query.filter(Rental.user_id == user.user_id or Rental.book_id == book_id).first() is None:
+        now = datetime.datetime.now()
+        returnTime = now + datetime.timedelta(days=10) 
+        rental = Rental(user.user_id, book_name, 1 ,book_id, now, returnTime)
+        if book.inventory > 0 :
+            Book.query.filter(Book.book_name == book_name).update({'inventory': Book.inventory - 1})
+            db.session.add(rental)
+            db.session.commit()
+            return jsonify({"result":"success"})
+        else:
+            return jsonify({"result:fail"})
+        
     else:
         return jsonify({"result":"fail"})
-
-    # 대여 오류 - rental 테이블에 해당 이름의 책 존재 시 대여 못하게 하는 기능
-    # 반납기능
-    # 반납 과 대여 버튼 구분하고싶다.
-
 
 #반납하기
 @library.route('/returnpopup/<id>')
 def renturn_popup(id):
     id = int(id) #책 ID
-    book_data = Book.query.filter(Book.id == id).all()
+    book_data = Book.query.filter(Book.id == id).first()
     return render_template('returnpopup.html', data = book_data) 
 
 @library.route('/return', methods=['POST'])
 def return_go():
     
-    book_name = request.form['book_name']
+    book_id = request.form['book_id']
     user = User.query.filter(User.id== session.get('login')).first() #대여하는 user 정보
     
-    if Rental.query.filter(Rental.user_id == user.user_id and Rental.book_name == book_name).first() is None: #대여한적 없을 때
+    if Rental.query.filter(Rental.user_id == user.user_id or Rental.book_id == book_id).first() is None: #대여한적 없을 때
         return jsonify({"result":"fail"})
     else:
-        Rental.query.filter(Rental.user_id == user.user_id and Rental.book_name == book_name).delete()
-        book_return = Book.query.filter(Book.book_name == book_name).first()
+        Rental.query.filter(Rental.user_id == user.user_id or Rental.book_id == book_id).delete()
+        book_return = Book.query.filter(Book.id == book_id).first()
         book_return.inventory +=1
         db.session.commit() 
         return jsonify({"result":"success"})
@@ -156,6 +150,18 @@ def post():
 
     post = Post(user_id, content, book_id, starValue)
     db.session.add(post)
+
+    
+    
+    book = Book.query.filter(Book.id == book_id).first()
+    star = Post.query.filter(Post.book_id == book_id)
+    starSum = 0
+    
+    for d in star:
+        starSum += int(d.starValue)
+    starAvg = int(starSum/len(star.all()))
+    book.starAvg = starAvg
+    
     db.session.commit()
 
     return jsonify({"result":"success"})
@@ -199,4 +205,15 @@ def myPage():
     if request.method == 'GET':
         user = User.query.filter(User.id == session['login']).first()
         rental_data = Rental.query.filter(Rental.user_id == user.user_id).all()
-        return render_template('myPage.html', data = rental_data)
+        return render_template('myPage.html', data = rental_data, user = user)
+
+#id 중복 체크
+@library.route('/checkEmail', methods=['POST'])
+def checkEmail():
+    user_id = request.form['user_id']
+    user = User.query.filter(User.user_id == user_id).first()
+
+    if user is None:
+        return jsonify({"result":"success"})
+    else:
+        return jsonify({"result":"fail"})

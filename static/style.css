@@ -1,10 +1,60 @@
 * {
     margin: 0;
+    font-family: "jua";
 }
 
+@font-face {
+
+  src : url("./fonts/BMJUA_ttf.ttf");
+  font-family: "jua" 
+
+}
+
+.rental-p {
+  
+  margin-top: 10px;
+  margin-left: 130px;
+}
+
+.comment-btn {
+  float: right;
+  margin-right: 23%;
+}
+
+.del-btn, .update-btn {
+  background-color: #42413f;
+  border-color: #42413f;
+  color: white;
+  font-size: 15px;
+  border-radius: 10px;
+}
+
+.new-btn {
+  background-color: #42413f;
+  border-color: #42413f;
+  color: white;
+  font-size: 15px;
+  border-radius: 10px;
+  float: right;
+  margin-right: 23%;
+}
+
+input[type=password] {
+  font-family: "Aria";
+}
+
+.star {
+  margin-left: 45%;
+}
+
+.comment {
+  float: left;
+  width: 250px;
+  margin-left: 20%;
+}
 
 .star-rating {
-    border:solid 1px #ccc;
+    
     display:flex;
     flex-direction: row-reverse;
     font-size:1.5em;
@@ -33,12 +83,11 @@
   }
 
   .starValue {
-    border:solid 1px #ccc;
+  
     font-size:1.5em;
     justify-content:space-around;
     padding:0 .2em;
     text-align:center;
-    width:5em;
     
 }
 
@@ -58,30 +107,56 @@
     text-align : left;
 }
 
-#imgs {
-    width: 250px;
-    height: 300px;
+.detail-img {
+  width: 400px;
+  height: 450px;
+  margin-bottom: 3%;
+}
+
+.imgs {
+    width: 200px;
+    height: 250px;
     margin-bottom: 20px;
 
 }
 
 .book_detail {
+    margin-top: 5%;
+    margin-bottom: 5%;
     text-align: center;
+
 }
 
+.book-name {
+  margin-bottom:3%;
+  text-align: center;
+}
+
+.detail-img, .detail {
+  display: inline-block;
+}
+.detail-des {
+  display: block;
+}
+
+
+
 .description {
-    width: 50%;
+    text-align: center;
     padding-left: 25%;
+    padding-right: 25%;
     
 }
 
 
-ul {
+.booklist {
     list-style:none;
     display:grid; 
-    grid-template-columns: 250px 250px 250px 250px;
-    grid-template-rows: 550px 550px ;
+    grid-template-columns: 300px 300px 300px 300px;
+    grid-template-rows: 610px 610px ;
     gap: 30px 30px;
+    padding-top: 5%;
+    padding-left: 10%;
 
 }
 
@@ -89,13 +164,8 @@ ul {
 .card-body {
     display: inline-block;
     width: 250px;
-    height: 550px;
+    height: 610px;
     outline: 3px solid gray;
-}
-
-
-p {
-    margin-bottom: 10px;
 }
 
 
@@ -103,14 +173,17 @@ p {
     text-align: right;
 }
 
+.login-before {
+  color:rgb(187, 81, 81);
+}
+
 a { 
-    display: inline-block;
+    display: inline;
     text-decoration:none;
     margin-bottom: 10px;
  } 
 
  .new-star-rating {
-    border:solid 1px #ccc;
     display:flex;
     flex-direction: row-reverse;
     font-size:1.5em;
@@ -137,3 +210,152 @@ a {
   .new-star-rating label:hover ~ label {
     color:#fc0;
   }
+
+  .title {
+    padding-top: 5%;
+    text-align: center;
+  }
+
+  .form-label {
+    height: 30px;
+  }
+
+  .mypage-h3 {
+    padding-top: 10px;
+    text-align: center;
+    color:#B5B4B4;
+    
+  }
+  .join-form {
+    text-align: center;
+    border: solid 2px;
+    width: 800px;
+    height: 450px;
+    margin-left: 23%;
+  }
+
+  .login-form {
+    text-align: center;
+    border: solid 2px;
+    width: 800px;
+    height: 300px;
+    margin-left: 23%;
+  }
+  
+  .join-label {
+    display: block;
+    background-color: gray;
+  }
+
+  .help-label {
+    color: #B5B4B4;
+    display: block;
+  }
+
+  .detail-label {
+    margin-left: 25%;
+    display: block;
+    width: 50%;
+    background-color: #B5B4B4;
+  }
+
+  #join-button {
+    margin-top: 5%;
+    text-align: center;
+  }
+
+  .login-go, .join-go {
+    text-align: center;
+    display: block;
+    color:black;
+  }
+
+  .book-p {
+    color: #75736e ;
+    margin-bottom: 10px;
+    
+  }
+
+  .rental-button, .return-button {
+    float: right;
+    background-color: #42413f;
+    border-color: #42413f;
+    color: white;
+    border-radius: 10px;
+    margin-left: 5px;
+  }
+
+  .check-btn {
+    background-color: #42413f;
+    border-color: #42413f;
+    color: white;
+  }
+  
+  
+.snip1535 {
+  background-color: #42413f;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 1em;
+  font-size: 22px;
+  line-height: 1em;
+  margin: 15px 40px;
+  outline: none;
+  padding: 12px 40px 10px;
+  position: relative;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+.snip1535:before,
+.snip1535:after {
+  border-color: transparent;
+  -webkit-transition: all 0.25s;
+  transition: all 0.25s;
+  border-style: solid;
+  border-width: 0;
+  content: "";
+  height: 24px;
+  position: absolute;
+  width: 24px;
+}
+.snip1535:before {
+  border-color:#42413f;
+  border-right-width: 2px;
+  border-top-width: 2px;
+  right: -5px;
+  top: -5px;
+}
+.snip1535:after {
+  border-bottom-width: 2px;
+  border-color: #42413f;
+  border-left-width: 2px;
+  bottom: -5px;
+  left: -5px;
+}
+.snip1535:hover,
+.snip1535.hover {
+  background-color: #42413f;
+}
+.snip1535:hover:before,
+.snip1535.hover:before,
+.snip1535:hover:after,
+.snip1535.hover:after {
+  height: 100%;
+  width: 100%;
+}
+
+.nav-style {
+  Position: Fixed;
+  width: 100%;
+}
+
+.rental-btn, .return-btn {
+  text-align: center;
+  background-color: #42413f;
+  border-color: #42413f;
+  color: white;
+  border-radius: 10px;
+  margin-left: 5px;
+}

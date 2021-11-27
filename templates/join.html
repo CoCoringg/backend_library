@@ -2,37 +2,147 @@
 <head>
 {% block head %}
 {{ super() }}
+<script>
+$(".hover").mouseleave(
+  function() {
+    $(this).removeClass("hover");
+  }
+);
+</script>
 
 <script>
+        function idCheck(){  
+                let user_id = $("#userId").val()
+                
+                if (user_id == '') {
+                        $().ready(function () {  
+                                Swal.fire({ 
+                                icon: 'error', // Alert 타입 
+                                title: '오류!', // Alert 제목 
+                                text: "아이디를 입력해 주세요", // Alert 내용
+                             }); }); 
+                        return ;
+                    }
+
+                $.ajax({
+                        url: '/checkEmail', 
+                        type: 'post',
+                        data: {
+                                'user_id':user_id
+                        },
+                        success: function (res) {
+                                if (res['result'] == 'success') {
+                                        $().ready(function () {  
+                                                Swal.fire({ 
+                                                icon: 'succes', // Alert 타입 
+                                                title: '사용가능', // Alert 제목 
+                                                text: "사용가능한 이메일입니다!", // Alert 내용
+                                                }); }); 
+                                                
+                                                $('#userId').focus()
+                                        
+                                }
+                                else {
+                                        $().ready(function () {  
+                                                Swal.fire({ 
+                                                icon: 'error', // Alert 타입 
+                                                title: '사용불가', // Alert 제목 
+                                                text: "중복된 이메일입니다!", // Alert 내용
+                                             }); }); 
+                                            
+                                             $('#userId').focus()   
+                                }
+                        }
+        })}
+</script>
+
+<script>
+
+        function check(re, what, message) {
+                if(re.test(what.val())) {
+                    return true;
+                }
+                
+                $().ready(function () {  
+                        Swal.fire({ 
+                        icon: 'error', // Alert 타입 
+                        title: '오류!', // Alert 제목 
+                        text: message, // Alert 내용
+                     }); }); 
+                what.focus();
+            }
        
         function regist() {
-            let name = $("#name").val()
-            let user_id = $("#userId").val()
-            let user_pw = $("#userPw").val()
-            let user_pw2 = $("#userPw2").val()
+            let name = $("#name")
+            let user_id = $("#userId")
+            let user_pw = $("#userPw")
+            let user_pw2 = $("#userPw2")
+
+            var re1 = /^[가-힣a-zA-Z]+$/; //이름: 한글이나 영문
+            var re2 = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;  //이메일 형식
             
-            if (user_id == '' || user_pw == '' || name == '') {
-                alert("이름과 아이디, 패스워드를 입력해 주세요");
+            //비밀번호 
+            var check1 = /^(?=.*[a-zA-Z])(?=.*[0-9]).{10,}$/;   //영문,숫자
+	    var check2 = /^(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).{10,}$/;  //영문,특수문자
+            var check3 = /^(?=.*[^a-zA-Z0-9])(?=.*[0-9]).{10,}$/;  //특수문자, 숫자 
+            var check4 = /^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\-_=+]).{8,}$/ //영문,숫자,특수문자 모두 사용
+
+
+            if (user_id.val() == '' || user_pw.val() == '' || name.val() == '') {
+                $().ready(function () {  
+                        Swal.fire({ 
+                        icon: 'error', // Alert 타입 
+                        title: '오류!', // Alert 제목 
+                        text: "이름과 아이디, 패스워드를 입력해 주세요", // Alert 내용
+                     }); }); 
                 return ;
             }
             
-            if (user_pw != user_pw2) {
-                alert("비밀번호를 확인해 주세요!");
+            if (user_pw.val() != user_pw2.val()) {
+                $().ready(function () {  
+                        Swal.fire({ 
+                        icon: 'error', // Alert 타입 
+                        title: '오류!', // Alert 제목 
+                        text: "비밀번호를 확인해 주세요!", // Alert 내용
+                     }); }); 
+                
                 return ;
             }
+
+            if(!check(re1, name, "이름은 한글 또는 영문으로만 입력해주세요")) {
+                    return false;
+            }
+
+            if(!check(re2, user_id, "적합하지 않은 이메일 형식입니다.")) {
+                return false;
+            }
+
+            if(!check((check1||check2||check3||check4), user_pw, "비밀번호 생성 규칙을 지켜 입력해주세요")) {
+                return false;
+            }
+
             
             $.ajax({
-            url: '/join',
+            url: '/join', 
             type: 'post',
             data: {
-                    'name' : name,
-                    'user_id': user_id,
-                    'user_pw': user_pw
+                    'name' : name.val(),
+                    'user_id': user_id.val(),
+                    'user_pw': user_pw.val()
             },
             success: function (res) {
                     if (res['result'] == 'success') {
-                            alert("회원가입 성공!");
-                            window.location.href = '/login'
+                        $().ready(function () {  
+                                Swal.fire({ 
+                                icon: 'success', // Alert 타입 
+                                title: '완료!', // Alert 제목 
+                                text: "회원가입 성공!", // Alert 내용
+                             }); }); 
+                            
+                             setTimeout(function() {
+                                window.location.href = '/login'
+                              }, 2000);
+                            
                     }
             }
     })
@@ -48,34 +158,40 @@
 {{ super() }}
 <h2 class="title">Elice 도서관 회원가입</h2>
 <hr>
-<div class="card">
-        <div class="card-body">
-                <div class="mb-3 row">
-                        <label class="col-sm-2 col-form-label">NAME</label>
-                        <div class="col-sm-10">
-                                <input type="text" id='name' class="form-control" placeholder="elice">
+<div class="join-form">
+        <div>
+                <div >
+                        <label class='join-label'>NAME</label>
+                        <div>
+                                <input type="text" id='name' placeholder="elice">
+                                <label class='help-label'>이름은 한글이나 영문으로만 입력해주세요.</label>
                         </div>
                 </div>
-                <div class="mb-3 row">
-                        <label class="col-sm-2 col-form-label">ID</label>
-                        <div class="col-sm-10">
-                                <input type="text" id='userId' class="form-control" placeholder="elice">
+                <div>
+                        <label class='join-label' >ID</label>
+                        <div >
+                                <input type="text" id='userId'  placeholder="elice@elice.com">
+                                <input type="button" class='check-btn' value="ID중복확인" onclick="idCheck()">
+                                <label class='help-label'>아이디는 이메일 형식으로 입력해주세요.</label>
+
                         </div>
                 </div>
-                <div class="mb-3 row">
-                        <label class="col-sm-2 col-form-label">Password</label>
-                        <div class="col-sm-10">
-                                <input type="password" class="form-control" id="userPw">
+                <div>
+                        <label class='join-label'>Password</label>
+                        <div >
+                                <input type="password" id="userPw">
+                                <label class='help-label'>영문,숫자,특수문자 중 2가지 조합하여 10자리 이상 입력하거나 3가지 모두 사용하여 8자리 이상 입력해주세요</label>
                         </div>
                 </div>
-                <div class="mb-3 row">
-                        <label class="col-sm-2 col-form-label">Password Check</label>
-                        <div class="col-sm-10">
-                                <input type="password" class="form-control" id="userPw2">
+                <div >
+                        <label class='join-label'>Password Check</label>
+                        <div >
+                                <input type="password" id="userPw2">
                         </div>
                 </div>
-                <button class="btn btn-primary" onclick=regist()>회원가입하기</button>
-                <a href="/login" class="btn btn-primary">로그인하기</a>
+                <div>
+                <button class="snip1535" id='join-button' onclick='regist()'>회원가입하기</button>
+                </div>
         </div>
 </div>
 <hr>

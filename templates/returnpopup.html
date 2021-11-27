@@ -1,45 +1,65 @@
 <html>
 <head>
-  <title>대여하기</title>
-  <script type=text/javascript src="{{url_for('static', filename='jquery.js') }}"></script>
-    <script language="javascript">
-        function return_go(book_name) {
-            
-            
-            $.ajax({
-                url: '/return',
-                type: 'post',
-                data: {
-                    
-                    'book_name':book_name
-                },
-                success: function (res) {
-                    if (res['result'] == 'success') {
-                            alert("반납 성공!");
-                            opener.parent.location.reload();
-                            window.close();
-                    } else {
-                        alert("대여 후 이용해주세요.");
-                        window.close();
-                    }
-            }
-            })
+  
+    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
+    <script type=text/javascript src="{{url_for('static', filename='jquery.js') }}"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>  
 
-        }
+    <title>대여하기</title>
+    <script type=text/javascript src="{{url_for('static', filename='jquery.js') }}"></script>
+    <script>
+            function return_go(book_id) {
+                
+                
+                $.ajax({
+                    url: '/return',
+                    type: 'post',
+                    data: {
+                        
+                        'book_id':book_id
+                    },
+                    success: function (res) {
+                        if (res['result'] == 'success') {
+                            $().ready(function () {  
+                                Swal.fire({ 
+                                icon: 'success', // Alert 타입 
+                                title: '완료!', // Alert 제목 
+                                text: "반납을 완료하였습니다!", // Alert 내용
+                             }); });
+                            
+                             setTimeout(function() {
+                                window.close();
+                              }, 2000);
+                        } else {
+                            $().ready(function () {  
+                                Swal.fire({ 
+                                icon: 'fail', // Alert 타입 
+                                title: '실패!', // Alert 제목 
+                                text: "대여 후 이용해주세요!", // Alert 내용
+                             }); });
+                            
+                             setTimeout(function() {
+                                window.close();
+                              }, 2000);
+                        }
+                }
+                })
+
+            }
     </script>
 </head>
 <body>
-    <h1>반납하기</h1>
+    <h2 class='title' style="padding-top: 0;">반납하기</h2>
     <hr>
-    {% for d in data %}
         <div class='book_detail'>
-            
-            <h4>{{d.book_name}}</h4>
+            <h4>{{data.book_name}}</h4>
             <p>반납: 1권</p>
-            <div><button id='return' onclick="return_go('{{d.book_name}}')" >반납</button></div>
+            <div><button id='return' class='return-btn' onclick="return_go('{{data.id}}')" >반납하기</button></div>
             
         </div>
-    {% endfor %}
+    
     
 
 </body>

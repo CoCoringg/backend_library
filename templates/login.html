@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 <head>
     {% block head %}
-    <!-- {{ super() }} 스타일시트 적용--> 
     {{ super() }}
 
     <script>
@@ -11,7 +10,12 @@
             let user_pw = $("#userPw").val()
 
             if (user_id == '' || user_pw == '') {
-                alert("아이디와 패스워드를 입력 해주세요.");
+                $().ready(function () { $("#join-button").click(function () { 
+                    Swal.fire({ 
+                    icon: 'error', // Alert 타입 
+                    title: '오류!', // Alert 제목 
+                    text: '아이디와 비밀번호를 입력해주세요!', // Alert 내용
+                 }); }); });
                 return ;
             }
             
@@ -24,12 +28,30 @@
                 },
                 success: function(res){
                     if(res['result'] == 'success'){
-                        alert("로그인 성공")
-                        window.location.href = '/'
+                        $().ready(function () {  
+                            Swal.fire({ 
+                            icon: 'success', // Alert 타입 
+                            title: '완료!', // Alert 제목 
+                            text: "로그인 성공!", // Alert 내용
+                         }); }); 
+                        
+                         setTimeout(function() {
+                            window.location.href = '/'
+                          }, 2000);
+                        
                     }
                     else {
-                        alert("로그인 실패!")
-                        window.location.reload()
+                        $().ready(function () {  
+                            Swal.fire({ 
+                            icon: 'error', // Alert 타입 
+                            title: '실패!', // Alert 제목 
+                            text: "아이디와 비밀번호를 다시 확인해주세요!", // Alert 내용
+                         }); }); 
+                        
+                         setTimeout(function() {
+                            window.location.reload()
+                          }, 2000);
+                        
                     }
                 }
             })
@@ -43,22 +65,22 @@
 {{ super() }}
 <h2 class="title">Elice 도서관 로그인</h2>
 <hr>
-<div class="card">
-    <div class="card-body">
-        <div class="mb-3 row">
-            <label class="col-sm-2 col-form-label">ID</label>
-            <div class="col-sm-10">
-                <input type="text" id='userId' class="form-control" placeholder="elice">
+<div class="login-form">
+    <div >
+        <div >
+            <label >ID</label>
+            <div >
+                <input type="text" id='userId'  placeholder="elice@elice.com">
             </div>
         </div>
-        <div class="mb-3 row">
-            <label class="col-sm-2 col-form-label">Password</label>
-            <div class="col-sm-10">
-                <input type="password" class="form-control" id="userPw">
+        <div >
+            <label >Password</label>
+            <div>
+                <input type="password" id="userPw">
             </div>
         </div>
-        <button class="btn btn-primary" onclick=login()>로그인하기</button>
-        <a href="/join" class="btn btn-primary">회원가입하기</a>
+        <button  class="snip1535" id='join-button' onclick=login()>로그인하기</button>
+        <a class="join-go" href="/join">회원가입하기</a>
     </div>
 </div>
 <hr>
