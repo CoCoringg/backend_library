@@ -89,7 +89,7 @@
                 }
             })
         }
-        function postUpdatePost(index) {
+        function postUpdatePost(index,book_id) {
             let content = $(`#userEidContent${index}`).val()
             let starValue = $('input[name=new_rating]:checked').val()
 
@@ -109,7 +109,8 @@
                 data: {
                     "index": index,
                     "content": content,
-                    "starValue":starValue
+                    "starValue":starValue,
+                    "book_id":book_id
                 },
                 success: function (res) {
                     if (res['result'] == 'success') {
@@ -131,10 +132,10 @@
         }
 
  
-        function updatePost(index) {
+        function updatePost(index,book_id) {
             let content = $(`#userContent${index}`).text()
             let tmpHtml = `<div><textarea id=userEidContent${index} rows="3" cols='50' style="resize: none;"></textarea></div>`
-            let tmpBtn = `<button class="new-btn" onclick="postUpdatePost(${index})">수정완료</button>`
+            let tmpBtn = `<button class="new-btn" onclick="postUpdatePost(${index},${book_id})">수정완료</button>`
             let starValue = `<div class="new-star-rating">
                                 <input type="radio" id="new-5-stars" name="new_rating" value="5"  />
                                 <label for="new-5-stars" class="star">&#9733;</label>
@@ -256,7 +257,7 @@
         
         <div class="comment-btn">
             <button class="del-btn" id='delBtn{{post.index}}'onclick="deletePost('{{post.index}}')">삭제하기</button>
-            <button class="update-btn" id='editBtn{{post.index}}' class="btn btn-sm btn-success" onclick="updatePost('{{post.index}}')">수정하기</button>
+            <button class="update-btn" id='editBtn{{post.index}}' class="btn btn-sm btn-success" onclick="updatePost('{{post.index}}','{{post.book_id}}')">수정하기</button>
         </div>
         
     </div>

@@ -21,13 +21,9 @@ def load_logged_in_user():
 
 @library.route("/")
 def hello():
-             
     if session.get('login') is not None:
-        
         data = Book.query.order_by(Book.id).all()
-         
         return render_template('book_list.html', data=data)
-    
     else:
         data = Book.query.order_by(Book.id).all()
         return render_template('book_list.html', data = data, rental_data = None)
@@ -89,20 +85,16 @@ def detail_go(id):
 @library.route('/rentalpopup/<id>')
 def rental_popup(id):
     id = int(id) #책 ID
-    
-    # if session.get("login") is not None:
     book_data = Book.query.filter(Book.id == id).first()
     return render_template('rentalpopup.html', data = book_data) 
         
 
 @library.route('/rental', methods=['POST'])
 def rental():
-    
     book_name = request.form['book_name']
     book_id = request.form['book_id']
     user = User.query.filter(User.id== session.get('login')).first() #대여하는 user 정보
     book = Book.query.filter(Book.id == book_id).first() #책 정보
-    
     if Rental.query.filter(Rental.user_id == user.user_id or Rental.book_id == book_id).first() is None:
         now = datetime.datetime.now()
         returnTime = now + datetime.timedelta(days=10) 
@@ -114,7 +106,6 @@ def rental():
             return jsonify({"result":"success"})
         else:
             return jsonify({"result:fail"})
-        
     else:
         return jsonify({"result":"fail"})
 
@@ -172,6 +163,7 @@ def update():
     index = request.form['index'] #POST 테이블 댓글 index
     content = request.form['content'] #새로 바꿀 내용
     new_star = request.form['starValue'] #새로운 별점
+    book_id = request.form['book_id']
 
     user = User.query.filter(User.id == session['login']).first()
 
@@ -179,6 +171,17 @@ def update():
 
     data.content = content
     data.starValue = new_star
+
+    book = Book.query.filter(Book.id == book_id).first()
+    star = Post.query.filter(Post.book_id == book_id)
+    starSum = 0
+    
+    for d in star:
+        starSum += int(d.starValue)
+    starAvg = int(starSum/len(star.all()))
+    book.starAvg = starAvg
+    
+    
     db.session.commit()
 
     return jsonify({"result":"success"})
